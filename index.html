@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>何金玲 - 数据科学项目作品集</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e8e8e8;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header {
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 60%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 48px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 8px 32px rgba(0,212,255,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #8892b0;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            color: #ccd6f6;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-links a:hover {
+            background: rgba(0,212,255,0.15);
+            border-color: rgba(0,212,255,0.4);
+            color: #00d4ff;
+            transform: translateY(-2px);
+        }
+
+        .skills-section {
+            padding: 40px 0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #00d4ff, #7b2cbf);
+            border-radius: 2px;
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .skill-tag {
+            padding: 8px 18px;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(123,44,191,0.1));
+            border: 1px solid rgba(0,212,255,0.2);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #a8b2d1;
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(123,44,191,0.2));
+            color: #00d4ff;
+            transform: translateY(-2px);
+        }
+
+        .projects-section {
+            padding: 40px 0 80px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .project-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0,212,255,0.2);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .project-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #e6f1ff;
+            line-height: 1.4;
+        }
+
+        .project-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .badge-ml { background: rgba(123,44,191,0.15); color: #c77dff; }
+        .badge-bi { background: rgba(100,255,218,0.15); color: #64ffda; }
+        .badge-data { background: rgba(0,212,255,0.15); color: #00d4ff; }
+
+        .project-desc {
+            font-size: 0.9rem;
+            color: #8892b0;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .project-metrics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .metric-item {
+            padding: 4px 10px;
+            background: rgba(0,212,255,0.08);
+            border-radius: 4px;
+            font-size: 0.78rem;
+            color: #00d4ff;
+            font-weight: 500;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .tech-item {
+            padding: 4px 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            font-size: 0.78rem;
+            color: #64ffda;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .project-links a {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-demo {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: white;
+        }
+
+        .btn-demo:hover {
+            box-shadow: 0 4px 16px rgba(0,212,255,0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-code {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #ccd6f6;
+        }
+
+        .btn-code:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.3);
+            color: #e6f1ff;
+        }
+
+        .btn-disabled {
+            background: rgba(255,255,255,0.03);
+            border: 1px dashed rgba(255,255,255,0.1);
+            color: #555;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .section-label {
+            font-size: 0.85rem;
+            color: #64ffda;
+            margin-bottom: 16px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: #555;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .project-links { flex-direction: column; }
+            header { padding: 50px 0 40px; }
+        }
+    </style>
+    <base target="_blank">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="avatar">何</div>
+            <h1>何金玲</h1>
+            <p class="subtitle">数据科学与大数据技术 · 滇西应用技术大学</p>
+            <div class="contact-links">
+                <a href="https://github.com/hjl-beautiful" target="_blank" rel="noopener noreferrer">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                    GitHub
+                </a>
+                <a href="mailto:hejinling1900@163.com">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/></svg>
+                    邮箱
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="skills-section">
+        <div class="container">
+            <h2 class="section-title">技术栈</h2>
+            <div class="skills-grid">
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">SQL</span>
+                <span class="skill-tag">MySQL</span>
+                <span class="skill-tag">Flask</span>
+                <span class="skill-tag">Streamlit</span>
+                <span class="skill-tag">ECharts</span>
+                <span class="skill-tag">Plotly</span>
+                <span class="skill-tag">Pandas</span>
+                <span class="skill-tag">Scikit-learn</span>
+                <span class="skill-tag">XGBoost</span>
+                <span class="skill-tag">SHAP</span>
+                <span class="skill-tag">Prophet</span>
+                <span class="skill-tag">特征工程</span>
+                <span class="skill-tag">时间序列</span>
+                <span class="skill-tag">RFM模型</span>
+                <span class="skill-tag">数据可视化</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="projects-section">
+        <div class="container">
+            <p class="section-label">核心项目</p>
+            <div class="projects-grid">
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 class="project-title">企业数据智能监控大屏</h3>
+                        <span class="project-badge badge-bi">全栈 BI</span>
+                    </div>
+                    <p class="project-desc">Flask + SQLite + Streamlit 全栈 BI 监控平台，覆盖销售、订单、用户、转化、商品 5 大业务模块，支持 KPI 下钻、智能告警与准实时订单流。</p>
+                    <div class="project-metrics">
+                        <span class="metric-item">91 天自洽业务数据</span>
+                        <span class="metric-item">6 大核心指标</span>
+                    </div>
+                    <div class="tech-stack">
+                        <span class="tech-item">Python</span>
+                        <span class="tech-item">Flask</span>
+                        <span class="tech-item">SQLite</span>
+                        <span class="tech-item">Streamlit</span>
+                        <span class="tech-item">Plotly</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/hjl-beautiful/real-time-dashboard" class="btn-code">源码</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 class="project-title">景区客流智能预测平台</h3>
+                        <span class="project-badge badge-ml">机器学习</span>
+                    </div>
+                    <p class="project-desc">基于九寨沟 1,869 天真实公开数据，构建 40 维特征 + XGBoost 时序预测模型，支持未来 7 日客流预测与 SHAP 可解释性分析。</p>
+                    <div class="project-metrics">
+                        <span class="metric-item">R2 = 0.9665</span>
+                        <span class="metric-item">MAPE = 5.1%</span>
+                    </div>
+                    <div class="tech-stack">
+                        <span class="tech-item">Python</span>
+                        <span class="tech-item">XGBoost</span>
+                        <span class="tech-item">scikit-learn</span>
+                        <span class="tech-item">SHAP</span>
+                        <span class="tech-item">Streamlit</span>
+                        <span class="tech-item">Plotly</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://yunnan-travel-platform-ukyi4hkkrl3jqdku2dvmen.streamlit.app/" class="btn-demo">在线演示</a>
+                        <a href="https://github.com/hjl-beautiful/yunnan-travel-platform" class="btn-code">源码</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 class="project-title">电商用户消费行为分析</h3>
+                        <span class="project-badge badge-ml">机器学习</span>
+                    </div>
+                    <p class="project-desc">基于 RFM 模型与机器学习（K-Means 聚类、随机森林分类）的用户价值洞察平台，覆盖数据清洗、特征工程、建模预测与可视化。</p>
+                    <div class="project-metrics">
+                        <span class="metric-item">准确率 98.7%</span>
+                        <span class="metric-item">RFM + K-Means</span>
+                    </div>
+                    <div class="tech-stack">
+                        <span class="tech-item">Python</span>
+                        <span class="tech-item">Streamlit</span>
+                        <span class="tech-item">Pandas</span>
+                        <span class="tech-item">scikit-learn</span>
+                        <span class="tech-item">RFM</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://consumption-analysis-v2-3wkvrutxrpfvtaaqlnkudn.streamlit.app/" class="btn-demo">在线演示</a>
+                        <a href="https://github.com/hjl-beautiful/consumption-analysis-v2" class="btn-code">源码</a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 class="project-title">淘宝双11销售趋势与用户行为分析</h3>
+                        <span class="project-badge badge-data">数据分析</span>
+                    </div>
+                    <p class="project-desc">基于 2009-2023 年真实 GMV 公开数据与 50,000 条模拟用户行为数据，完成销售趋势、用户画像与回头客预测完整分析流程。</p>
+                    <div class="project-metrics">
+                        <span class="metric-item">15 年 GMV 趋势</span>
+                        <span class="metric-item">50,000 用户样本</span>
+                    </div>
+                    <div class="tech-stack">
+                        <span class="tech-item">Python</span>
+                        <span class="tech-item">Streamlit</span>
+                        <span class="tech-item">Pandas</span>
+                        <span class="tech-item">scikit-learn</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://taobao-11-analysis-pwr5mpyjhyw2xsnnzterg5.streamlit.app/" class="btn-demo">在线演示</a>
+                        <a href="https://github.com/hjl-beautiful/taobao11" class="btn-code">源码</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>2026 何金玲 · 数据科学与大数据技术 · 滇西应用技术大学</p>
+        </div>
+    </footer>
+</body>
+</html>
