@@ -381,9 +381,9 @@
                         <h3 class="project-title">企业数据智能监控大屏</h3>
                         <span class="project-badge badge-bi">全栈 BI</span>
                     </div>
-                    <p class="project-desc">Flask + SQLite + Streamlit 全栈 BI 监控平台，覆盖销售、订单、用户、转化、商品 5 大业务模块，支持 KPI 下钻、智能告警与准实时订单流。</p>
+                    <p class="project-desc">Flask + SQLite + Streamlit 全栈 BI 监控平台，覆盖销售、订单、用户、转化、商品 5 大业务模块，支持 KPI 下钻、异常告警与订单流 30 秒轮询刷新。</p>
                     <div class="project-metrics">
-                        <span class="metric-item">91 天自洽业务数据</span>
+                        <span class="metric-item">91 天业务数据</span>
                         <span class="metric-item">6 大核心指标</span>
                     </div>
                     <div class="tech-stack">
@@ -428,10 +428,10 @@
                         <h3 class="project-title">电商用户消费行为分析</h3>
                         <span class="project-badge badge-ml">机器学习</span>
                     </div>
-                    <p class="project-desc">基于 RFM 模型与机器学习（K-Means 聚类、随机森林分类）的用户价值洞察平台，覆盖数据清洗、特征工程、建模预测与可视化。</p>
+                    <p class="project-desc">基于 RFM 模型与机器学习的用户价值洞察平台：K-Means 聚类识别 4 类用户群体（轮廓系数评估），随机森林分类器预测高价值客户（AUC 0.99）。</p>
                     <div class="project-metrics">
-                        <span class="metric-item">准确率 98.7%</span>
-                        <span class="metric-item">RFM + K-Means</span>
+                        <span class="metric-item">轮廓系数 0.62</span>
+                        <span class="metric-item">准确率 98.7% · AUC 0.99</span>
                     </div>
                     <div class="tech-stack">
                         <span class="tech-item">Python</span>
@@ -439,6 +439,8 @@
                         <span class="tech-item">Pandas</span>
                         <span class="tech-item">scikit-learn</span>
                         <span class="tech-item">RFM</span>
+                        <span class="tech-item">K-Means</span>
+                        <span class="tech-item">随机森林</span>
                     </div>
                     <div class="project-links">
                         <a href="https://consumption-analysis-v2-3wkvrutxrpfvtaaqlnkudn.streamlit.app/" class="btn-demo">在线演示</a>
@@ -451,10 +453,10 @@
                         <h3 class="project-title">淘宝双11销售趋势与用户行为分析</h3>
                         <span class="project-badge badge-data">数据分析</span>
                     </div>
-                    <p class="project-desc">基于 2009-2023 年真实 GMV 公开数据与 50,000 条模拟用户行为数据，完成销售趋势、用户画像与回头客预测完整分析流程。</p>
+                    <p class="project-desc">基于 2009-2023 年 15 年真实 GMV 公开数据，完成销售趋势分析、用户画像建模与回头客预测完整流程。</p>
                     <div class="project-metrics">
                         <span class="metric-item">15 年 GMV 趋势</span>
-                        <span class="metric-item">50,000 用户样本</span>
+                        <span class="metric-item">回头客预测</span>
                     </div>
                     <div class="tech-stack">
                         <span class="tech-item">Python</span>
@@ -473,18 +475,18 @@
                         <h3 class="project-title">Spark 电商离线数仓 ETL 平台</h3>
                         <span class="project-badge badge-bi">大数据 ETL</span>
                     </div>
-                    <p class="project-desc">基于 PySpark 构建 ODS→DWD→DWS→ADS 四层数仓，处理 39 万条 UCI 英国电商交易数据，完成数据清洗、维度建模、RFM 用户分群与复购率分析。</p>
+                    <p class="project-desc">基于 PySpark 构建 ODS→DWD→DWS→ADS 四层数仓，处理 39 万条 UCI 英国电商交易数据，完成数据清洗、维度建模、RFM 用户分群与复购率分析，配套 Airflow 调度与数据质量校验。</p>
                     <div class="project-metrics">
                         <span class="metric-item">39 万条 ETL</span>
                         <span class="metric-item">复购率 65.51%</span>
-                        <span class="metric-item">RFM 4 群</span>
+                        <span class="metric-item">四层数仓</span>
                     </div>
                     <div class="tech-stack">
                         <span class="tech-item">PySpark</span>
                         <span class="tech-item">Spark SQL</span>
                         <span class="tech-item">Parquet</span>
-                        <span class="tech-item">KMeans</span>
-                        <span class="tech-item">Python</span>
+                        <span class="tech-item">Airflow</span>
+                        <span class="tech-item">RFM</span>
                     </div>
                     <div class="project-links">
                         <a href="https://github.com/hjl-beautiful/spark-ecommerce-warehouse" class="btn-code">源码</a>
