@@ -62,7 +62,7 @@
     <div class="container">
         <header>
             <h1>九寨沟景区客流智能预测与运营决策系统</h1>
-            <p class="subtitle">基于 1,869 天真实公开数据的机器学习预测 · 落地「预测 → 预警 → 调度」运营闭环</p>
+            <p class="subtitle">基于 1,869 天真实公开数据的机器学习预测 · 落地「预测 → 预警 → 调度 → 复盘」运营闭环（含 Power BI 星型模型看板）</p>
         </header>
 
         <div class="metrics">
@@ -78,11 +78,15 @@
                 <div class="metric-value">0.9665</div>
                 <div class="metric-label">XGBoost R²</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-value">5.1%</div>
-                <div class="metric-label">预测 MAPE</div>
+                <div class="metric-card">
+                    <div class="metric-value">5.1%</div>
+                    <div class="metric-label">预测 MAPE</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">3 份</div>
+                    <div class="metric-label">星型模型 CSV（Power BI）</div>
+                </div>
             </div>
-        </div>
 
         <div class="section">
             <h2>业务背景</h2>
@@ -157,6 +161,21 @@
         </div>
 
         <div class="section">
+            <h2>Power BI 运营看板（数据可视化延伸）</h2>
+            <p>在预测模型之外，额外构建了一套 <strong>Power BI 星型模型</strong>，把日度客流事实表与<strong>日期维</strong>、<strong>法定节假日维</strong>关联，支撑运营人员自助分析与汇报：</p>
+            <ul>
+                <li><strong>星型模型：</strong>fact_visitors（日度客流事实）+ dim_date（日期维）+ dim_holiday（145 天法定节假日维），dim_date / dim_holiday 均 1 对多关联 fact_visitors[date]；</li>
+                <li><strong>下钻能力：</strong>支持按<strong>法定节假日 / 年份 / 月 / 星期</strong>维度下钻客流分布，定位节假日驱动的峰值规律；</li>
+                <li><strong>DAX 度量：</strong>用 DAX 计算同比、节假日客流占比、峰值日饱和度等运营指标，可解释、可复用；</li>
+                <li><strong>交付物：</strong>仓库内提供 fact_visitors.csv / dim_date.csv / dim_holiday.csv 三份 CSV + Power BI 执行清单与看板规划文档，可直接在 Power BI Desktop 打开建模型。</li>
+            </ul>
+            <div class="analysis-box">
+                <h4>为什么补 Power BI</h4>
+                <p>预测给出"未来多少"，BI 回答"过去为什么、现在怎么分布"。两者互补：XGBoost 做预测与预警，Power BI 做日常运营下钻与复盘，覆盖"预测 → 预警 → 调度 → 复盘"完整链路，更贴合数据分析 / BI 岗要求。</p>
+            </div>
+        </div>
+
+        <div class="section">
             <h2>局限性 & 迭代方向</h2>
             <ul>
                 <li><strong>高 R² 的来源：</strong>已用时间切分、无未来信息泄漏；强季节 + 节假日 + 自相关是高 R² 的合理解释。</li>
@@ -181,6 +200,9 @@
                 <span class="tech-tag">SQLite</span>
                 <span class="tech-tag">特征工程</span>
                 <span class="tech-tag">时间序列</span>
+                <span class="tech-tag">Power BI</span>
+                <span class="tech-tag">DAX</span>
+                <span class="tech-tag">星型模型</span>
             </div>
             <div class="links">
                 <a href="https://scenic-flow-prediction-6kcsck73rnsmdv3auyxfau.streamlit.app/" class="btn-demo" target="_blank" rel="noopener noreferrer">在线演示</a>

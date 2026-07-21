@@ -82,11 +82,15 @@
                 <div class="metric-value">0.62</div>
                 <div class="metric-label">聚类轮廓系数</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-value">0.99</div>
-                <div class="metric-label">高价值预测 AUC</div>
+                <div class="metric-card">
+                    <div class="metric-value">0.99</div>
+                    <div class="metric-label">高价值预测 AUC</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">40.7 万</div>
+                    <div class="metric-label">RFM SQL 验证行数</div>
+                </div>
             </div>
-        </div>
 
         <div class="section">
             <h2>业务背景</h2>
@@ -159,6 +163,21 @@
         </div>
 
         <div class="section">
+            <h2>RFM SQL 工程化（真实数据验证）</h2>
+            <p>为证明 RFM 逻辑可落地到生产 SQL 而非仅停留在 Python，额外编写 <strong>rfm_analysis.sql</strong> 并在<strong>真实 UCI Online Retail 数据集（406,829 行 / 4,372 客户）上全量验证通过</strong>：</p>
+            <ul>
+                <li><strong>NTILE 五分位打分：</strong>对 Recency / Frequency / Monetary 各做 5 分位，R≥4 且 F≥4 切出"重要价值客户"（25.6%，客单 £5300）；</li>
+                <li><strong>LAG 复购间隔：</strong>窗口函数计算客户两次购买间隔，作为运营触达节奏依据；</li>
+                <li><strong>RANK 选品：</strong>按国家 RANK 取 Top3 品类，支撑本地化选品；</li>
+                <li><strong>复购率：</strong>整体复购率 65.58%，与 Spark 数仓口径一致、互相印证。</li>
+            </ul>
+            <div class="analysis-box">
+                <h4>工程注意点（面试可展开）</h4>
+                <p>SQL 中用<strong>数据内最新日</strong>而非 <code>now()</code> 计算 Recency，保证同一份数据不同天跑结果一致、可复现；清洗时剔除退货单（C 开头）、负数量、零单价、无效客户。脚本已在真实数据上验证，非"写完没跑"。</p>
+            </div>
+        </div>
+
+        <div class="section">
             <h2>局限性 & 迭代方向</h2>
             <ul>
                 <li><strong>高 AUC 排查：</strong>AUC 0.99 / 准确率 98.7% 偏高，需确认特征中无<strong>未来信息泄漏</strong>、训练/测试按时间切分、类别不平衡已处理；若标签定义存在信息重叠需重设。</li>
@@ -180,6 +199,7 @@
                 <span class="tech-tag">随机森林</span>
                 <span class="tech-tag">特征工程</span>
                 <span class="tech-tag">用户分群</span>
+                <span class="tech-tag">SQL</span>
             </div>
             <div class="links">
                 <a href="https://consumption-analysis-v2-3wkvrutxrpfvtaaqlnkudn.streamlit.app/" class="btn-demo" target="_blank" rel="noopener noreferrer">在线演示</a>

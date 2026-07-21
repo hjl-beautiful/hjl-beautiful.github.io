@@ -136,6 +136,16 @@
         </div>
 
         <div class="section">
+            <h2>RFM SQL 复用（跨项目验证）</h2>
+            <p>本项目的 RFM 分群逻辑已<strong>沉淀为可复用的 rfm_analysis.sql</strong>，与电商用户分析项目共用同一套 SQL，并在<strong>真实 UCI 数据（406,829 行）上验证通过</strong>：</p>
+            <ul>
+                <li><strong>口径一致：</strong>NTILE 五分位 + RANK 选品 + LAG 复购间隔，与本数仓 ADS 层 RFM 指标同构；</li>
+                <li><strong>互相印证：</strong>SQL 复购率 65.58% 与本项目口径 65.51% 高度吻合，验证分群逻辑正确；</li>
+                <li><strong>数据闭环：</strong>体现"数仓产出 → SQL 工程化 → 跨项目复用"的标准做法，正是企业数据开发提倡的能力。</li>
+            </ul>
+        </div>
+
+        <div class="section">
             <h2>项目亮点</h2>
             <ul>
                 <li><strong>工程规范：</strong>严格四层分层 + 维度建模，体现数据开发的标准方法论；</li>
@@ -165,6 +175,7 @@
                 <span class="tech-tag">维度建模</span>
                 <span class="tech-tag">数据清洗</span>
                 <span class="tech-tag">数据质量</span>
+                <span class="tech-tag">SQL</span>
             </div>
             <div class="links">
                 <a href="https://github.com/hjl-beautiful/spark-ecommerce-warehouse" class="btn-code" target="_blank" rel="noopener noreferrer">源码</a>
