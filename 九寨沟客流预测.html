@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>九寨沟景区客流智能预测与运营决策系统</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
+            min-height: 100vh;
+            line-height: 1.75;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 28px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        h1 { font-size: 2.1rem; font-weight: 800; color: #1e293b; margin-bottom: 10px; letter-spacing: -0.02em; }
+        .subtitle { font-size: 1rem; color: #64748b; }
+        .section { background: white; border-radius: 16px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+        .section h2 { font-size: 1.3rem; font-weight: 700; color: #1e293b; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        .section h2::before { content: ''; display: inline-block; width: 4px; height: 22px; background: #3b82f6; border-radius: 2px; }
+        .section h3 { font-size: 1.05rem; font-weight: 700; color: #1e40af; margin: 18px 0 8px; }
+        .section p { font-size: 0.96rem; color: #334155; margin-bottom: 10px; }
+        .section ul { margin: 6px 0 10px 22px; color: #334155; font-size: 0.95rem; }
+        .section li { margin-bottom: 6px; }
+        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px; margin-bottom: 24px; }
+        .metric-card { background: white; border-radius: 16px; padding: 24px 18px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; transition: transform 0.2s, box-shadow 0.2s; }
+        .metric-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        .metric-value { font-size: 1.8rem; font-weight: 800; color: #3b82f6; margin-bottom: 4px; }
+        .metric-label { font-size: 0.85rem; color: #64748b; font-weight: 500; }
+        .analysis-box { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-left: 4px solid #3b82f6; border-radius: 0 12px 12px 0; padding: 18px 22px; margin-top: 14px; }
+        .analysis-box h4 { font-size: 1rem; font-weight: 700; color: #1e40af; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .analysis-box h4::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #3b82f6; }
+        .analysis-box p { color: #334155; }
+        .highlight { background: #fef3c7; padding: 2px 6px; border-radius: 4px; font-weight: 600; color: #92400e; }
+        .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; margin: 16px 0; }
+        .flow-step { flex: 1; min-width: 150px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; text-align: center; }
+        .flow-step .step-title { font-weight: 700; color: #1e40af; font-size: 1rem; margin-bottom: 6px; }
+        .flow-step .step-desc { font-size: 0.82rem; color: #475569; }
+        .flow-arrow { display: flex; align-items: center; color: #3b82f6; font-size: 1.6rem; font-weight: 700; }
+        .tech-tags { display: flex; justify-content: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .tech-tag { background: #f1f5f9; color: #475569; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        .links { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 18px; }
+        .links a { padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; }
+        .btn-demo { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; }
+        .btn-demo:hover { box-shadow: 0 4px 16px rgba(59,130,246,0.3); transform: translateY(-1px); }
+        .btn-code { background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; }
+        .btn-code:hover { background: #e2e8f0; color: #1e293b; }
+        .note { font-size: 0.82rem; color: #94a3b8; margin-top: 8px; }
+        footer { text-align: center; padding: 32px 0 16px; color: #94a3b8; font-size: 0.88rem; border-top: 1px solid #e2e8f0; margin-top: 12px; }
+        footer a { color: #3b82f6; text-decoration: none; }
+        @media (max-width: 768px) { .flow-arrow { display: none; } .flow { flex-direction: column; } h1 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>九寨沟景区客流智能预测与运营决策系统</h1>
+            <p class="subtitle">基于 1,869 天真实公开数据的机器学习预测 · 落地「预测 → 预警 → 调度」运营闭环</p>
+        </header>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-value">1,869</div>
+                <div class="metric-label">天真实日度数据</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">40</div>
+                <div class="metric-label">维特征工程</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">0.9665</div>
+                <div class="metric-label">XGBoost R²</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">5.1%</div>
+                <div class="metric-label">预测 MAPE</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>业务背景</h2>
+            <p>九寨沟作为世界自然遗产景区，客流高度集中于节假日与旅游旺季，存在两类运营痛点：</p>
+            <ul>
+                <li><strong>超载风险：</strong>单日客流超过核定最大承载量时，既威胁游客安全与体验，也违反景区限流规定；</li>
+                <li><strong>运力错配：</strong>摆渡车、餐饮与住宿按固定排班配置，无法匹配客流峰谷，导致高峰滞留、平峰空驶。</li>
+            </ul>
+            <div class="analysis-box">
+                <h4>核心问题</h4>
+                <p>能否用历史公开日度客流数据，<strong>提前 7 日预测未来客流并给出置信区间</strong>，支撑「预约限流 + 运力调度 + 商业备货」决策？</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>数据与方法</h2>
+            <ul>
+                <li><strong>数据：</strong>九寨沟景区公开日度客流数据，<span class="highlight">1,869 天</span>真实记录，日度粒度。</li>
+                <li><strong>特征工程：</strong><span class="highlight">40 维</span>，覆盖时间特征（年/月/周/季节）、节假日标记、滞后项（t-1/t-7/t-30）、滚动统计（7/30 日均值、标准差）。</li>
+                <li><strong>建模：</strong>XGBoost 回归，对比随机森林、线性回归基线；按<strong>时间切分</strong>训练/测试，避免未来信息泄漏。</li>
+                <li><strong>可解释性：</strong>SHAP 输出特征贡献，识别「节假日、去年同期、近期滚动均值」为 Top 驱动因子。</li>
+                <li><strong>部署：</strong>Streamlit 四页面应用（预测 / 置信区间可视化 / 因素分析 / 明细），已上线可演示。</li>
+            </ul>
+            <div class="analysis-box">
+                <h4>模型效果</h4>
+                <p>XGBoost 在测试集上取得 <strong>R² = 0.9665、MAPE = 5.1%</strong>，优于随机森林与线性回归基线，输出未来 7 日客流点预测与 <strong>90% 置信区间</strong>。日度客流具有强季节 + 节假日驱动 + 强自相关特性，配合滞后/滚动特征后高 R² 合理。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>业务闭环（项目亮点）</h2>
+            <p>预测不是终点，落地才是价值。系统把预测值翻译成运营可用的指标与动作：</p>
+
+            <h3>① 架构流程</h3>
+            <div class="flow">
+                <div class="flow-step">
+                    <div class="step-title">预测</div>
+                    <div class="step-desc">XGBoost 输出未来 7 日客流 + 90% 置信区间</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-title">预警</div>
+                    <div class="step-desc">计算日饱和度 S，S&gt;0.9 触发超载预警清单</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-title">调度</div>
+                    <div class="step-desc">预约限流 · 运力排班 · 商业备货 · 错峰引导</div>
+                </div>
+            </div>
+
+            <h3>② 业务指标</h3>
+            <ul>
+                <li><strong>日饱和度 S = 预测客流 / 核定日最大承载量 T</strong>（T 按景区最新规定参数化）；</li>
+                <li><strong>超载预警：</strong>S &gt; 0.9 的日期清单，提前 7 日锁定；</li>
+                <li><strong>预测区间覆盖率 PICP：</strong>真实值落在 90% 置信带内的比例（回测应 ≈ 90%，用于校准可信度）。</li>
+            </ul>
+
+            <h3>③ 四类运营策略</h3>
+            <ul>
+                <li><strong>预约限流：</strong>对预警日提前开放分时段预约、设置日售票上限，平滑单日负荷；</li>
+                <li><strong>运力调度：</strong>摆渡车 / 观光车按预测峰谷比动态排班，降低滞留与空驶；</li>
+                <li><strong>商业备货：</strong>餐饮、住宿、便利店基于 7 日预测做备货与人员排班；</li>
+                <li><strong>错峰引导：</strong>发布错峰游览建议，将高饱和日游客向相邻低饱和日迁移。</li>
+            </ul>
+
+            <div class="analysis-box">
+                <h4>可量化收益（按模型误差推算）</h4>
+                <p>模型 MAPE=5.1%，可提前 7 日锁定约 90% 以上的高峰日，显著降低超载误判；运力按峰谷比动态排班，理论上可减少平峰空驶与高峰滞留（可在试点后实测量化）。</p>
+                <p class="note">说明：以上为方法论层面的收益估算，非已落地实测数字，面试中如实表述更稳妥。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>局限性 & 迭代方向</h2>
+            <ul>
+                <li><strong>高 R² 的来源：</strong>已用时间切分、无未来信息泄漏；强季节 + 节假日 + 自相关是高 R² 的合理解释。</li>
+                <li><strong>置信区间校准：</strong>90% 区间需回测 PICP ≈ 90%，若偏窄将引入分位数回归 / Conformal Prediction 改进。</li>
+                <li><strong>外部冲击：</strong>疫情、政策限流、极端天气等黑天鹅未纳入，模型在突变期失效。</li>
+                <li><strong>收益量化：</strong>当前为估算，计划接入真实调度记录做 A/B 对照，把"估算"变为"实测"。</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>技术栈</h2>
+            <div class="tech-tags">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">XGBoost</span>
+                <span class="tech-tag">scikit-learn</span>
+                <span class="tech-tag">SHAP</span>
+                <span class="tech-tag">Pandas</span>
+                <span class="tech-tag">NumPy</span>
+                <span class="tech-tag">Streamlit</span>
+                <span class="tech-tag">Plotly</span>
+                <span class="tech-tag">Flask</span>
+                <span class="tech-tag">SQLite</span>
+                <span class="tech-tag">特征工程</span>
+                <span class="tech-tag">时间序列</span>
+            </div>
+            <div class="links">
+                <a href="https://scenic-flow-prediction-6kcsck73rnsmdv3auyxfau.streamlit.app/" class="btn-demo" target="_blank" rel="noopener noreferrer">在线演示</a>
+                <a href="https://github.com/hjl-beautiful/scenic-flow-prediction" class="btn-code" target="_blank" rel="noopener noreferrer">源码</a>
+                <a href="index.html" class="btn-code">返回作品集</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>2026 何金玲 | 数据科学与大数据技术 | 滇西应用技术大学</p>
+            <p style="margin-top:6px"><a href="index.html">← 返回作品集首页</a></p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spark 电商离线数仓 ETL 平台</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
+            min-height: 100vh;
+            line-height: 1.75;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 28px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        h1 { font-size: 2.1rem; font-weight: 800; color: #1e293b; margin-bottom: 10px; letter-spacing: -0.02em; }
+        .subtitle { font-size: 1rem; color: #64748b; }
+        .section { background: white; border-radius: 16px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+        .section h2 { font-size: 1.3rem; font-weight: 700; color: #1e293b; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        .section h2::before { content: ''; display: inline-block; width: 4px; height: 22px; background: #3b82f6; border-radius: 2px; }
+        .section h3 { font-size: 1.05rem; font-weight: 700; color: #1e40af; margin: 18px 0 8px; }
+        .section p { font-size: 0.96rem; color: #334155; margin-bottom: 10px; }
+        .section ul { margin: 6px 0 10px 22px; color: #334155; font-size: 0.95rem; }
+        .section li { margin-bottom: 6px; }
+        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px; margin-bottom: 24px; }
+        .metric-card { background: white; border-radius: 16px; padding: 24px 18px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; transition: transform 0.2s, box-shadow 0.2s; }
+        .metric-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        .metric-value { font-size: 1.8rem; font-weight: 800; color: #3b82f6; margin-bottom: 4px; }
+        .metric-label { font-size: 0.85rem; color: #64748b; font-weight: 500; }
+        .analysis-box { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-left: 4px solid #3b82f6; border-radius: 0 12px 12px 0; padding: 18px 22px; margin-top: 14px; }
+        .analysis-box h4 { font-size: 1rem; font-weight: 700; color: #1e40af; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .analysis-box h4::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #3b82f6; }
+        .analysis-box p { color: #334155; }
+        .highlight { background: #fef3c7; padding: 2px 6px; border-radius: 4px; font-weight: 600; color: #92400e; }
+        .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; margin: 16px 0; }
+        .flow-step { flex: 1; min-width: 150px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; text-align: center; }
+        .flow-step .step-title { font-weight: 700; color: #1e40af; font-size: 1rem; margin-bottom: 6px; }
+        .flow-step .step-desc { font-size: 0.82rem; color: #475569; }
+        .flow-arrow { display: flex; align-items: center; color: #3b82f6; font-size: 1.6rem; font-weight: 700; }
+        .tech-tags { display: flex; justify-content: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .tech-tag { background: #f1f5f9; color: #475569; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        .links { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 18px; }
+        .links a { padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; }
+        .btn-demo { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; }
+        .btn-demo:hover { box-shadow: 0 4px 16px rgba(59,130,246,0.3); transform: translateY(-1px); }
+        .btn-code { background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; }
+        .btn-code:hover { background: #e2e8f0; color: #1e293b; }
+        .note { font-size: 0.82rem; color: #94a3b8; margin-top: 8px; }
+        footer { text-align: center; padding: 32px 0 16px; color: #94a3b8; font-size: 0.88rem; border-top: 1px solid #e2e8f0; margin-top: 12px; }
+        footer a { color: #3b82f6; text-decoration: none; }
+        @media (max-width: 768px) { .flow-arrow { display: none; } .flow { flex-direction: column; } h1 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Spark 电商离线数仓 ETL 平台</h1>
+            <p class="subtitle">基于 PySpark 的 ODS→DWD→DWS→ADS 四层数仓 · 39 万条交易数据的工程化落地</p>
+        </header>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-value">39 万</div>
+                <div class="metric-label">条交易数据 ETL</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">4</div>
+                <div class="metric-label">层数仓架构</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">65.51%</div>
+                <div class="metric-label">用户复购率</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">Airflow</div>
+                <div class="metric-label">调度编排</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>业务背景</h2>
+            <p>电商原始交易数据通常是脏、散、未建模的流水，直接分析既慢又不规范。<strong>离线数仓</strong>的价值在于：用分层架构把"原始数据"逐步加工为"可信任、可复用、可分析"的指标资产，支撑下游 BI、用户分群与经营分析。</p>
+            <div class="analysis-box">
+                <h4>核心问题</h4>
+                <p>能否用 Spark 大数据引擎，把 39 万条英国电商交易数据清洗、建模为规范的四层数仓，并产出 RFM 分群与复购率等可复用指标？</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>数仓分层架构</h2>
+            <div class="flow">
+                <div class="flow-step">
+                    <div class="step-title">ODS</div>
+                    <div class="step-desc">贴源层：原始交易明细落地</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-title">DWD</div>
+                    <div class="step-desc">明细层：清洗、去重、标准化</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-title">DWS</div>
+                    <div class="step-desc">汇总层：用户/商品主题宽表</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-title">ADS</div>
+                    <div class="step-desc">应用层：RFM、复购率等指标</div>
+                </div>
+            </div>
+            <div class="analysis-box">
+                <h4>关键设计</h4>
+                <p><strong>维度建模：</strong>以用户、商品、时间为维度构建星型/雪花模型，保证指标口径一致；<strong>列式存储：</strong>中间结果落 Parquet，提升查询效率；<strong>数据质量：</strong>在 DWD 层做空值、异常值、重复订单校验。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>核心产出</h2>
+            <ul>
+                <li><strong>RFM 用户分群：</strong>在 DWS 用户主题宽表上计算 Recency/Frequency/Monetary，输出分群标签；</li>
+                <li><strong>复购率分析：</strong>计算 <span class="highlight">65.51%</span> 用户复购率，定位高复购品类与召回人群；</li>
+                <li><strong>可复用指标层：</strong>ADS 层沉淀口径统一的指标，供下游 BI 直接取数，避免重复计算。</li>
+            </ul>
+            <div class="analysis-box">
+                <h4>调度与可靠性</h4>
+                <p>用 <strong>Airflow</strong> 编排各层 ETL 任务的依赖与重试，配合数据质量校验，保证每日跑数的稳定性与可观测性——这是数据开发岗的核心工程能力体现。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>项目亮点</h2>
+            <ul>
+                <li><strong>工程规范：</strong>严格四层分层 + 维度建模，体现数据开发的标准方法论；</li>
+                <li><strong>大数据栈：</strong>PySpark / Spark SQL / Parquet 贴合企业数据开发技术栈；</li>
+                <li><strong>可运维：</strong>Airflow 调度 + 质量校验，从"能跑"到"可靠地跑"；</li>
+                <li><strong>业务衔接：</strong>数仓产出直接喂给 RFM / 复购分析，对接电商用户分析项目，形成数据闭环。</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>局限性 & 迭代方向</h2>
+            <ul>
+                <li><strong>实时性：</strong>当前为离线批量，后续可补 Spark Streaming / Flink 近实时链路；</li>
+                <li><strong>规模验证：</strong>39 万条属中小样本，需补充更大体量下的分区、倾斜处理与性能调优；</li>
+                <li><strong>指标体系：</strong>ADS 层指标可随业务扩展（留存、漏斗、GMV 拆解），并接入指标管理平台统一口径。</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>技术栈</h2>
+            <div class="tech-tags">
+                <span class="tech-tag">PySpark</span>
+                <span class="tech-tag">Spark SQL</span>
+                <span class="tech-tag">Parquet</span>
+                <span class="tech-tag">Airflow</span>
+                <span class="tech-tag">RFM</span>
+                <span class="tech-tag">维度建模</span>
+                <span class="tech-tag">数据清洗</span>
+                <span class="tech-tag">数据质量</span>
+            </div>
+            <div class="links">
+                <a href="https://github.com/hjl-beautiful/spark-ecommerce-warehouse" class="btn-code" target="_blank" rel="noopener noreferrer">源码</a>
+                <a href="index.html" class="btn-code">返回作品集</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>2026 何金玲 | 数据科学与大数据技术 | 滇西应用技术大学</p>
+            <p style="margin-top:6px"><a href="index.html">← 返回作品集首页</a></p>
+        </footer>
+    </div>
+</body>
+</html>

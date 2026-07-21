@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业数据智能监控大屏</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
+            min-height: 100vh;
+            line-height: 1.75;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 28px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        h1 { font-size: 2.1rem; font-weight: 800; color: #1e293b; margin-bottom: 10px; letter-spacing: -0.02em; }
+        .subtitle { font-size: 1rem; color: #64748b; }
+        .section { background: white; border-radius: 16px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+        .section h2 { font-size: 1.3rem; font-weight: 700; color: #1e293b; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        .section h2::before { content: ''; display: inline-block; width: 4px; height: 22px; background: #3b82f6; border-radius: 2px; }
+        .section h3 { font-size: 1.05rem; font-weight: 700; color: #1e40af; margin: 18px 0 8px; }
+        .section p { font-size: 0.96rem; color: #334155; margin-bottom: 10px; }
+        .section ul { margin: 6px 0 10px 22px; color: #334155; font-size: 0.95rem; }
+        .section li { margin-bottom: 6px; }
+        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px; margin-bottom: 24px; }
+        .metric-card { background: white; border-radius: 16px; padding: 24px 18px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; transition: transform 0.2s, box-shadow 0.2s; }
+        .metric-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        .metric-value { font-size: 1.8rem; font-weight: 800; color: #3b82f6; margin-bottom: 4px; }
+        .metric-label { font-size: 0.85rem; color: #64748b; font-weight: 500; }
+        .analysis-box { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-left: 4px solid #3b82f6; border-radius: 0 12px 12px 0; padding: 18px 22px; margin-top: 14px; }
+        .analysis-box h4 { font-size: 1rem; font-weight: 700; color: #1e40af; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .analysis-box h4::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #3b82f6; }
+        .analysis-box p { color: #334155; }
+        .highlight { background: #fef3c7; padding: 2px 6px; border-radius: 4px; font-weight: 600; color: #92400e; }
+        .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; margin: 16px 0; }
+        .flow-step { flex: 1; min-width: 150px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; text-align: center; }
+        .flow-step .step-title { font-weight: 700; color: #1e40af; font-size: 1rem; margin-bottom: 6px; }
+        .flow-step .step-desc { font-size: 0.82rem; color: #475569; }
+        .flow-arrow { display: flex; align-items: center; color: #3b82f6; font-size: 1.6rem; font-weight: 700; }
+        .mod-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 12px 0; }
+        .mod-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; }
+        .mod-card .mod-name { font-weight: 700; color: #1e40af; margin-bottom: 6px; }
+        .mod-card .mod-desc { font-size: 0.86rem; color: #475569; }
+        .tech-tags { display: flex; justify-content: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .tech-tag { background: #f1f5f9; color: #475569; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        .links { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 18px; }
+        .links a { padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; }
+        .btn-demo { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; }
+        .btn-demo:hover { box-shadow: 0 4px 16px rgba(59,130,246,0.3); transform: translateY(-1px); }
+        .btn-code { background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; }
+        .btn-code:hover { background: #e2e8f0; color: #1e293b; }
+        .note { font-size: 0.82rem; color: #94a3b8; margin-top: 8px; }
+        footer { text-align: center; padding: 32px 0 16px; color: #94a3b8; font-size: 0.88rem; border-top: 1px solid #e2e8f0; margin-top: 12px; }
+        footer a { color: #3b82f6; text-decoration: none; }
+        @media (max-width: 768px) { .flow-arrow { display: none; } .flow { flex-direction: column; } h1 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>企业数据智能监控大屏</h1>
+            <p class="subtitle">Flask + SQLite + Streamlit 全栈 BI 监控平台 · 覆盖 5 大业务模块的实时决策看板</p>
+        </header>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-value">91</div>
+                <div class="metric-label">天业务数据</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">5</div>
+                <div class="metric-label">大业务模块</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">6</div>
+                <div class="metric-label">大核心 KPI</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">30s</div>
+                <div class="metric-label">订单流轮询刷新</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>业务背景</h2>
+            <p>企业日常运营涉及销售、订单、用户、转化、商品等多条业务线，管理者需要<strong>一个统一视图</strong>实时掌握经营状态，而非在多个系统间切换。本项目构建一套<strong>自采集、自存储、自展示</strong>的全栈监控大屏：</p>
+            <ul>
+                <li>用 Flask 提供数据接口并模拟/接入业务数据流；</li>
+                <li>SQLite 作为轻量存储层，承载明细与聚合结果；</li>
+                <li>Streamlit 承担可视化与交互，支撑 KPI 下钻与异常告警。</li>
+            </ul>
+            <div class="analysis-box">
+                <h4>核心问题</h4>
+                <p>能否用一套<strong>低依赖、可本地运行</strong>的全栈方案，把分散的业务指标聚合为可下钻、可告警、近实时的经营看板，帮助管理者快速定位异常？</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>架构流程</h2>
+            <div class="flow">
+                <div class="flow-step">
+                    <div class="step-title">采集 / 接入</div>
+                    <div class="step-desc">Flask 服务产出或接入业务数据流</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-title">存储</div>
+                    <div class="step-desc">SQLite 落地明细表与聚合表</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-title">展示</div>
+                    <div class="step-desc">Streamlit 读取并渲染看板</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-title">告警</div>
+                    <div class="step-desc">KPI 阈值触发异常提示</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>五大业务模块</h2>
+            <div class="mod-grid">
+                <div class="mod-card">
+                    <div class="mod-name">销售模块</div>
+                    <div class="mod-desc">销售额趋势、同比环比、目标完成度。</div>
+                </div>
+                <div class="mod-card">
+                    <div class="mod-name">订单模块</div>
+                    <div class="mod-desc">订单量、客单价、订单状态分布，30 秒轮询刷新。</div>
+                </div>
+                <div class="mod-card">
+                    <div class="mod-name">用户模块</div>
+                    <div class="mod-desc">新增 / 活跃 / 留存、用户分层概览。</div>
+                </div>
+                <div class="mod-card">
+                    <div class="mod-name">转化模块</div>
+                    <div class="mod-desc">漏斗各环节转化率、流失定位。</div>
+                </div>
+                <div class="mod-card">
+                    <div class="mod-name">商品模块</div>
+                    <div class="mod-desc">Top 商品、品类结构、库存预警。</div>
+                </div>
+            </div>
+            <div class="analysis-box">
+                <h4>交互能力</h4>
+                <p><strong>KPI 下钻：</strong>从汇总指标点进明细，逐层定位问题根因；<strong>异常告警：</strong>对关键阈值（如转化骤降、库存告急）实时标红提示；<strong>实时刷新：</strong>订单流以 30 秒间隔轮询，保证看板时效性。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>项目亮点</h2>
+            <ul>
+                <li><strong>全栈闭环：</strong>从数据接口、存储到可视化一条龙，体现独立工程落地能力，适配 BI / 数据分析岗；</li>
+                <li><strong>轻量可运行：</strong>SQLite 零运维，整套方案可本地一键启动，便于演示与复现；</li>
+                <li><strong>业务视角：</strong>按真实经营逻辑组织指标，而非堆砌图表，贴合企业监控大屏需求场景。</li>
+            </ul>
+            <div class="analysis-box">
+                <h4>可量化收益（场景化表述）</h4>
+                <p>把分散指标收敛到单一看板后，管理者定位异常的时间从"多系统切换"缩短为"单屏下钻"；告警机制让关键波动第一时间可见。该价值在真实企业中对应<strong>经营异常响应提速</strong>，可在实习/工作中以实际 SLA 量化。</p>
+                <p class="note">说明：收益为场景化表述，演示数据为自建 / 模拟业务流，面试中如实说明数据来源更稳妥。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>局限性 & 迭代方向</h2>
+            <ul>
+                <li><strong>存储选型：</strong>SQLite 适合轻量与演示，生产环境可平滑迁移至 MySQL / ClickHouse / 数仓；</li>
+                <li><strong>实时性：</strong>当前为轮询刷新，后续可改为 WebSocket / 消息队列实现真正的流式推送；</li>
+                <li><strong>数据规模：</strong>演示为小样本，需补充大数据量下的性能与分页策略验证。</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>技术栈</h2>
+            <div class="tech-tags">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">Flask</span>
+                <span class="tech-tag">SQLite</span>
+                <span class="tech-tag">Streamlit</span>
+                <span class="tech-tag">Plotly</span>
+                <span class="tech-tag">Pandas</span>
+                <span class="tech-tag">数据可视化</span>
+                <span class="tech-tag">BI</span>
+                <span class="tech-tag">KPI 下钻</span>
+            </div>
+            <div class="links">
+                <a href="https://real-time-dashboard-4lbigrappycptxyvaty2jc3.streamlit.app/" class="btn-demo" target="_blank" rel="noopener noreferrer">在线演示</a>
+                <a href="https://github.com/hjl-beautiful/real-time-dashboard" class="btn-code" target="_blank" rel="noopener noreferrer">源码</a>
+                <a href="index.html" class="btn-code">返回作品集</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>2026 何金玲 | 数据科学与大数据技术 | 滇西应用技术大学</p>
+            <p style="margin-top:6px"><a href="index.html">← 返回作品集首页</a></p>
+        </footer>
+    </div>
+</body>
+</html>

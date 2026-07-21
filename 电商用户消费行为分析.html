@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电商用户消费行为分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
+            min-height: 100vh;
+            line-height: 1.75;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 28px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        h1 { font-size: 2.1rem; font-weight: 800; color: #1e293b; margin-bottom: 10px; letter-spacing: -0.02em; }
+        .subtitle { font-size: 1rem; color: #64748b; }
+        .section { background: white; border-radius: 16px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+        .section h2 { font-size: 1.3rem; font-weight: 700; color: #1e293b; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        .section h2::before { content: ''; display: inline-block; width: 4px; height: 22px; background: #3b82f6; border-radius: 2px; }
+        .section h3 { font-size: 1.05rem; font-weight: 700; color: #1e40af; margin: 18px 0 8px; }
+        .section p { font-size: 0.96rem; color: #334155; margin-bottom: 10px; }
+        .section ul { margin: 6px 0 10px 22px; color: #334155; font-size: 0.95rem; }
+        .section li { margin-bottom: 6px; }
+        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px; margin-bottom: 24px; }
+        .metric-card { background: white; border-radius: 16px; padding: 24px 18px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; transition: transform 0.2s, box-shadow 0.2s; }
+        .metric-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        .metric-value { font-size: 1.8rem; font-weight: 800; color: #3b82f6; margin-bottom: 4px; }
+        .metric-label { font-size: 0.85rem; color: #64748b; font-weight: 500; }
+        .analysis-box { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-left: 4px solid #3b82f6; border-radius: 0 12px 12px 0; padding: 18px 22px; margin-top: 14px; }
+        .analysis-box h4 { font-size: 1rem; font-weight: 700; color: #1e40af; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .analysis-box h4::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #3b82f6; }
+        .analysis-box p { color: #334155; }
+        .highlight { background: #fef3c7; padding: 2px 6px; border-radius: 4px; font-weight: 600; color: #92400e; }
+        .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; margin: 16px 0; }
+        .flow-step { flex: 1; min-width: 150px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; text-align: center; }
+        .flow-step .step-title { font-weight: 700; color: #1e40af; font-size: 1rem; margin-bottom: 6px; }
+        .flow-step .step-desc { font-size: 0.82rem; color: #475569; }
+        .flow-arrow { display: flex; align-items: center; color: #3b82f6; font-size: 1.6rem; font-weight: 700; }
+        .seg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 12px 0; }
+        .seg-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; }
+        .seg-card .seg-name { font-weight: 700; color: #1e40af; margin-bottom: 6px; }
+        .seg-card .seg-desc { font-size: 0.86rem; color: #475569; }
+        .tech-tags { display: flex; justify-content: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .tech-tag { background: #f1f5f9; color: #475569; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        .links { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 18px; }
+        .links a { padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; }
+        .btn-demo { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; }
+        .btn-demo:hover { box-shadow: 0 4px 16px rgba(59,130,246,0.3); transform: translateY(-1px); }
+        .btn-code { background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; }
+        .btn-code:hover { background: #e2e8f0; color: #1e293b; }
+        .note { font-size: 0.82rem; color: #94a3b8; margin-top: 8px; }
+        footer { text-align: center; padding: 32px 0 16px; color: #94a3b8; font-size: 0.88rem; border-top: 1px solid #e2e8f0; margin-top: 12px; }
+        footer a { color: #3b82f6; text-decoration: none; }
+        @media (max-width: 768px) { .flow-arrow { display: none; } .flow { flex-direction: column; } h1 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>电商用户消费行为分析</h1>
+            <p class="subtitle">RFM + 机器学习用户价值洞察平台 · 从"分群"到"高价值客户预测"的运营闭环</p>
+        </header>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-value">39 万</div>
+                <div class="metric-label">条真实交易数据</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">4</div>
+                <div class="metric-label">类用户群体</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">0.62</div>
+                <div class="metric-label">聚类轮廓系数</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">0.99</div>
+                <div class="metric-label">高价值预测 AUC</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>业务背景</h2>
+            <p>电商平台的用户价值差异极大：少数高价值用户贡献大部分 GMV，而多数低频用户对资源投放的回报有限。如何<strong>识别高价值人群、匹配差异化运营策略</strong>，是用户增长与精细化运营的核心命题。</p>
+            <div class="analysis-box">
+                <h4>核心问题</h4>
+                <p>能否基于真实交易数据，先用 RFM 体系刻画用户价值分层，再用机器学习识别高价值客户，把"事后统计"升级为"事前预测"？</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>方法流程</h2>
+            <div class="flow">
+                <div class="flow-step">
+                    <div class="step-title">RFM 构建</div>
+                    <div class="step-desc">Recency / Frequency / Monetary 三维度打分</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-title">K-Means 分群</div>
+                    <div class="step-desc">聚类识别 4 类用户，轮廓系数 0.62 评估</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-title">随机森林预测</div>
+                    <div class="step-desc">预测高价值客户，AUC 0.99</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-title">策略落地</div>
+                    <div class="step-desc">差异化运营 + 可解释特征</div>
+                </div>
+            </div>
+            <div class="analysis-box">
+                <h4>模型说明</h4>
+                <p>K-Means 以 RFM 三维度聚类，轮廓系数 <strong>0.62</strong> 表明聚类结构较合理；随机森林分类器在<strong>时间切分</strong>的训练/测试集上预测高价值客户，取得 <strong>准确率 98.7%、AUC 0.99</strong>。AUC 偏高，需结合特征与切分方式排查是否存数据泄漏（见局限性）。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>用户分群画像（示例结构）</h2>
+            <div class="seg-grid">
+                <div class="seg-card">
+                    <div class="seg-name">高价值忠诚客</div>
+                    <div class="seg-desc">近购、高频、高客单；重点维护与会员权益。</div>
+                </div>
+                <div class="seg-card">
+                    <div class="seg-name">潜力成长客</div>
+                    <div class="seg-desc">近期活跃、频次中等；可促频提客单。</div>
+                </div>
+                <div class="seg-card">
+                    <div class="seg-name">沉睡召回客</div>
+                    <div class="seg-desc">久未购、历史有价值；定向召回券。</div>
+                </div>
+                <div class="seg-card">
+                    <div class="seg-name">低频新客</div>
+                    <div class="seg-desc">近期首购、频次低；培育与引导复购。</div>
+                </div>
+            </div>
+            <p class="note">分群命名与画像是按 RFM 逻辑归纳的示例结构，具体边界以聚类结果为准；面试中以实际聚类中心解释更稳妥。</p>
+        </div>
+
+        <div class="section">
+            <h2>项目亮点</h2>
+            <ul>
+                <li><strong>可解释运营：</strong>随机森林特征重要性 + RFM 维度，把"谁是高价值"解释给业务方；</li>
+                <li><strong>从分析到预测：</strong>不止 RFM 描述性分层，更进一步做高价值客户预测，体现建模进阶；</li>
+                <li><strong>业务闭环：</strong>分群直接对应差异化运营动作，适配数据分析 / 用户增长岗。</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>局限性 & 迭代方向</h2>
+            <ul>
+                <li><strong>高 AUC 排查：</strong>AUC 0.99 / 准确率 98.7% 偏高，需确认特征中无<strong>未来信息泄漏</strong>、训练/测试按时间切分、类别不平衡已处理；若标签定义存在信息重叠需重设。</li>
+                <li><strong>聚类稳定性：</strong>K-Means 对尺度敏感，已做标准化；簇数 4 由业务经验 + 轮廓系数初定，可用肘部法 / 业务校验微调。</li>
+                <li><strong>因果缺失：</strong>当前为相关性与预测，未做 AB 实验验证运营策略的真实增量。</li>
+                <li><strong>数据时效：</strong>UCI 英国电商数据为历史样本，需结合当前业务做特征与阈值校准。</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>技术栈</h2>
+            <div class="tech-tags">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">Pandas</span>
+                <span class="tech-tag">scikit-learn</span>
+                <span class="tech-tag">Streamlit</span>
+                <span class="tech-tag">RFM</span>
+                <span class="tech-tag">K-Means</span>
+                <span class="tech-tag">随机森林</span>
+                <span class="tech-tag">特征工程</span>
+                <span class="tech-tag">用户分群</span>
+            </div>
+            <div class="links">
+                <a href="https://consumption-analysis-v2-3wkvrutxrpfvtaaqlnkudn.streamlit.app/" class="btn-demo" target="_blank" rel="noopener noreferrer">在线演示</a>
+                <a href="https://github.com/hjl-beautiful/consumption-analysis-v2" class="btn-code" target="_blank" rel="noopener noreferrer">源码</a>
+                <a href="index.html" class="btn-code">返回作品集</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>2026 何金玲 | 数据科学与大数据技术 | 滇西应用技术大学</p>
+            <p style="margin-top:6px"><a href="index.html">← 返回作品集首页</a></p>
+        </footer>
+    </div>
+</body>
+</html>
