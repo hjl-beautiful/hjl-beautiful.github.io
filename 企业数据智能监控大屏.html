@@ -66,7 +66,7 @@
     <div class="container">
         <header>
             <h1>企业数据智能监控大屏</h1>
-            <p class="subtitle">Flask + SQLite + Streamlit 全栈 BI 监控平台 · 覆盖 5 大业务模块的实时决策看板</p>
+            <p class="subtitle">Flask + SQLite + Streamlit 全栈 BI 监控平台 · 覆盖 5 大业务模块的经营分析看板</p>
         </header>
 
         <div class="metrics">
@@ -90,15 +90,15 @@
 
         <div class="section">
             <h2>业务背景</h2>
-            <p>企业日常运营涉及销售、订单、用户、转化、商品等多条业务线，管理者需要<strong>一个统一视图</strong>实时掌握经营状态，而非在多个系统间切换。本项目构建一套<strong>自采集、自存储、自展示</strong>的全栈监控大屏：</p>
+            <p>企业日常运营涉及销售、订单、付款、退款、地域等多条业务线，管理者需要<strong>一个统一视图</strong>掌握经营状态，而非在多个系统间切换。本项目构建一套<strong>读取真实公开订单数据、自存储、自展示</strong>的全栈监控大屏：</p>
             <ul>
-                <li>用 Flask 提供数据接口并模拟/接入业务数据流；</li>
+                <li>用 Flask 提供数据接口并读取真实电商订单数据流；</li>
                 <li>SQLite 作为轻量存储层，承载明细与聚合结果；</li>
                 <li>Streamlit 承担可视化与交互，支撑 KPI 下钻与异常告警。</li>
             </ul>
             <div class="analysis-box">
                 <h4>核心问题</h4>
-                <p>能否用一套<strong>低依赖、可本地运行</strong>的全栈方案，把分散的业务指标聚合为可下钻、可告警、近实时的经营看板，帮助管理者快速定位异常？</p>
+                <p>能否用一套<strong>低依赖、可本地运行</strong>的全栈方案，把分散的业务指标聚合为可下钻、可告警的经营看板，帮助管理者快速定位异常？</p>
             </div>
         </div>
 
@@ -132,28 +132,28 @@
             <div class="mod-grid">
                 <div class="mod-card">
                     <div class="mod-name">销售模块</div>
-                    <div class="mod-desc">销售额趋势、同比环比、目标完成度。</div>
+                    <div class="mod-desc">销售额趋势、日环比、目标完成度。</div>
                 </div>
                 <div class="mod-card">
                     <div class="mod-name">订单模块</div>
-                    <div class="mod-desc">订单量、客单价、订单状态分布，30 秒轮询刷新。</div>
+                    <div class="mod-desc">订单量、客单价、订单状态分布。</div>
                 </div>
                 <div class="mod-card">
-                    <div class="mod-name">用户模块</div>
-                    <div class="mod-desc">新增 / 活跃 / 留存、用户分层概览。</div>
+                    <div class="mod-name">付款模块</div>
+                    <div class="mod-desc">付款率、付款订单趋势。</div>
                 </div>
                 <div class="mod-card">
-                    <div class="mod-name">转化模块</div>
-                    <div class="mod-desc">漏斗各环节转化率、流失定位。</div>
+                    <div class="mod-name">退款模块</div>
+                    <div class="mod-desc">退款率、分省份退款异常。</div>
                 </div>
                 <div class="mod-card">
-                    <div class="mod-name">商品模块</div>
-                    <div class="mod-desc">Top 商品、品类结构、库存预警。</div>
+                    <div class="mod-name">地域模块</div>
+                    <div class="mod-desc">全国省份订单分布、省份销售 TOP10。</div>
                 </div>
             </div>
             <div class="analysis-box">
                 <h4>交互能力</h4>
-                <p><strong>KPI 下钻：</strong>从汇总指标点进明细，逐层定位问题根因；<strong>异常告警：</strong>对关键阈值（如转化骤降、库存告急）实时标红提示；<strong>实时刷新：</strong>订单流以 30 秒间隔轮询，保证看板时效性。</p>
+                <p><strong>KPI 下钻：</strong>从汇总指标点进明细，逐层定位问题根因；<strong>异常告警：</strong>对关键阈值（如退款率偏高、未付款占比上升）标红提示；<strong>自动刷新：</strong>订单流支持定时轮询，展示最新数据快照。</p>
             </div>
         </div>
 
@@ -167,7 +167,7 @@
             <div class="analysis-box">
                 <h4>可量化收益（场景化表述）</h4>
                 <p>把分散指标收敛到单一看板后，管理者定位异常的时间从"多系统切换"缩短为"单屏下钻"；告警机制让关键波动第一时间可见。该价值在真实企业中对应<strong>经营异常响应提速</strong>，可在实习/工作中以实际 SLA 量化。</p>
-                <p class="note">说明：收益为场景化表述，演示数据为自建 / 模拟业务流，面试中如实说明数据来源更稳妥。</p>
+                <p class="note">说明：收益为场景化表述，数据基于天池公开真实订单数据集（28,010 单），面试中可说明数据来源（天猫订单成交数据 / 天池公开数据集）。</p>
             </div>
         </div>
 
